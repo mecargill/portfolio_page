@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../css/main.css">
         <link rel="icon" href="../assets/img/rand_icon.png" type="image/png">
-        <script src="../js/main.js"></script>
         <title>Matthew Cargill</title>
+        
     </head>
     <!--this is my resume and a more detailed description-->
     <body>
@@ -26,14 +27,25 @@
             <h2>Resume PDF</h2>
             
             
-            <object data="../assets/docs/Resume_4-4-25.pdf" type="application/pdf" width="80%" height="550px" style="flex-shrink: 0;">
-                <p>
-                    It looks like your browser doesn’t support PDF viewing. 
-                    <a href="../assets/docs/Resume_4-4-25.pdf"> View the pdf here.</a>
-                </p>
+            <object id="resume" data="../assets/docs/Resume_4-4-25.pdf" type="application/pdf" width="80%" height="550px" style="flex-shrink: 0;">
             </object>
+
+            <p id="errMsg" style="display: none;">
+                It looks like your browser doesn’t support embedded PDF viewing. 
+                <a href="../assets/docs/Resume_4-4-25.pdf"> View the pdf here.</a>
+            </p>
             
-            
+            <script>
+                const obj = document.getElementById('resume');
+                const fallback = document.getElementById('errMsg');
+
+               
+                if (!obj.contentDocument) {
+                    obj.style.display = 'none';
+                    fallback.style.display = 'block';
+                }
+                
+            </script>
 
             <h2>More Details</h2>
             
