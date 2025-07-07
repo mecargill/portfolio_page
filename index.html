@@ -2,37 +2,43 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <link rel="stylesheet" href="css/main.css">
+        <!--It just looks dumb to have that world symbol, so I added a random icon instead-->
+        <link rel="icon" href="assets/img/rand_icon.png" type="image/png">
+
+        <script src="js/main.js"></script>
         <title>Matthew Cargill</title>
     </head>
     <!--this is a landing page, with an overview of myself and what the site is about-->
 
-    <div id="siteGridContainer">
+    <body>
         <header>
             <h1>Home</h1>
         </header>
 
         <nav>
-            <a href="index.html">Home</a>
-            <a href="html/projects.html">Projects</a>
-            <a href="html/resume.html">Resume</a>
+        
+            <a class="linkButton" href="index.html">Home</a>
+            <a class="linkButton" href="html/projects.html">Projects</a>
+            <a class="linkButton" href="html/resume.html">Resume</a>
+            <a class="linkButton" href="html/contact.html">Contact Info</a>
         </nav>
 
-        <body>
-            <img src="assets/img/amicalola.jpeg">
-
+        <main>
+            <h2>About</h2>
+            <img src="assets/img/amicalola.jpeg" style="width: 40%; height: fit-content; border-radius: 5px;">
+            <br>
             <p>
                 My name is Matthew Cargill, and I am an Electrical Engineering student at Georgia Tech. My degree specializations 
-                are signal processing and sensing. I am interested in a career developing new signal processing techniques for RF
-                or sensing applications. I anticipate graduating with my BS in December 2026, then participating in the BS/MS program
-                adding one more year for my MS.
+                are signal processing and sensing. I aspire to a career in RF, signal processing, and/or sensing. I anticipate graduating with my BS in December 2026, then participating in the BS/MS program, adding one more year for my MS.
             </p>
 
             <p>
-                On this website you can find documentation of the personal projects I have built, links to their code repositories,
-                my resume, and a detailed description of my skills/experience. You can reach me at mcargill3@gatech.edu.
+                On this website you can find documentation of the personal projects I have built, contact info, links to code repositories,
+                my resume, and a detailed description of my skills/experience. 
             </p>
             
-        </body>
-    </div>
+        </main>
+    </body>
 
 </html>
