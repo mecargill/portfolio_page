@@ -1,33 +1,89 @@
-body {
-    display: grid;
-    height: 100vh;
-    margin: 0px;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr 8fr;
-    grid-template-areas: 
-    "header header"
-    "nav main";
+/*define some variables*/
+:root {
+
+
+  --font-base: 16px;
+  --font-scale: 1.25;
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+
+  --color-bg: #ffffff;
+  --color-text-bg: #000000;
+  --color-primary: #00192d;
+  --color-light-primary: #064465;
+  --color-text-primary: #FFFFFF;
+  --color-accent: #0077cc;
 }
 
-header {
-    grid-area: header;
-    background-color: #00192d;
-    color: white;
-    text-align: center;
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+
+    height: 100vh;
+    margin: 0;
     
 }
 
-nav {
-    grid-area: nav;
-    background-color: #cccccccc;
+header {
+    height: fit-content;
+
+    background: linear-gradient(to bottom, var(--color-primary), var(--color-light-primary));
+
+
+    color: var(--color-text-primary);
+    
+
     display: flex;
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+h1 {
+   margin-left: 10%;
+   margin-right: auto;
+}
+
+nav {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+    margin-left: auto;
+    margin-right: 10%;
 
 }
 
+
+.navLink {
+    min-width: 10%;
+    text-decoration: none;
+    margin: 0 var(--space-md);
+    color: inherit;
+    text-align: center;
+    border-radius: 5px;
+    padding: var(--space-sm) var(--space-md);
+    transition: background-color 0.3s ease;
+  
+}
+
+.navLink:hover {
+    background-color: var(--color-accent);
+}
+
 main {
-    grid-area: main;
+    background: var(--color-bg);
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,30 +91,13 @@ main {
     margin: 10px;
 }
 
-
-
-
-
-.linkButton {
-    text-decoration: none;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin: 3vh;
-    background-color: #00192d;
-    text-align: center;
-    color: white;
-    border-radius: 2px;
-    width: 80%;
-}
-
-.linkButton:hover {
-    background-color: #86838a;
-}
-
 #projectGrid {
+    /*this will be a grid when I get more projects to put here. since theres only two it can be flexbox*/
     display: flex;
     flex-direction: row;
-    height: 100%;
+    justify-content: center;
+    height: fit-content;
+    width: fit-content;
     
 }
 
@@ -67,8 +106,8 @@ main {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    height: 90%;
-    width: 44%;
+    height: 95%;
+    width: 37%;
     margin: 3%;
     background-color: #cccccc;
     overflow: clip;
@@ -76,13 +115,33 @@ main {
 
 }
 
+.projLink {
+    
+    width: 50%;
+    background-color: var(--color-light-primary);
+    text-decoration: none;
+    margin-bottom: var(--space-lg);
+    margin-top: auto;
+    color: var(--color-text-primary);
+    text-align: center;
+    border-radius: 5px;
+    padding: var(--space-sm) var(--space-md);
+    transition: background-color 0.4s ease;
+  
+}
+
+.projLink:hover {
+    background-color: var(--color-accent);
+}
+
+
 .contact {
     display: flex;
     flex-direction: column;
     align-items: center;
-   
-    height: 92%;
-    width: 100%;
+    box-shadow: 1px 5px 10px rgb(140, 139, 139);
+    height: fit-content;
+    width: fit-content;
     margin: 3%;
     background-color: #cccccc;
     overflow: clip;
@@ -91,15 +150,15 @@ main {
     line-height: 2;
 }
 
-.leftText {
-    text-align: left;
-    width:100%;
-}
-
 p {
-    margin-left: 5vh;
-    margin-right: 5vh;
+    width: 90%;
     font-size: 1.1em;
     line-height: 1.3;
     
+}
+
+.imgMed {
+    width: 40%;
+    height: fit-content;
+    border-radius: 5px;
 }
