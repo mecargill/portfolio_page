@@ -26,7 +26,7 @@
 
         <main>
             <h2>Planning</h2>
-            <img src="../../assets/img/dist/schematic.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/dist/schematic.png" class="imgWide">
             <p>
             I chose to make a distortion pedal because I wanted to learn more about analog signal processing. Distortion pedals work by taking a signal, amplifying it, and clipping off the highest amplitude portions. I also learned that you can put the diodes in the feedback loop of the op amp or directly on the output signal. In the feedback loop, they effectively limit the current that can flow through the resistor and step down the gain if the output is too high, causing soft clipping. On the output, they completely flatten the peaks, causing hard clipping. 
             </p>
@@ -69,7 +69,7 @@
 
 
             <h2>Assembly</h2>
-            <img src="../../assets/img/dist/assembly.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/dist/assembly.png" class="imgWide">
            
             <p>
                 I added footprints for all the symbols, and turned the schematic into a PCB layout in KiCAD. At first, I tried to just make it in one layer to avoid using vias that I would have to electroplate. This is due to the fact that I would have to go through a training process to use GT's electroplating equipment. However, after a while, I realized that it was not as simple as I had thought. I started to think that it was actually impossible to make on one layer due to some loops that traces necessarily made around footprints, isolating other areas that needed traces. So, I decided I would make it two layers and just solder a lead in the via instead of electroplating it. The two layer design is pictured. It is a little bit more convoluted than it would have been if I had started out with a two layer design, but I had an attempted one layer that I converted to two layer. 
@@ -81,7 +81,7 @@
 
             
             <h2>Testing</h2>
-            <img src="../../assets/img/dist/finished.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/dist/finished.png" class="imgWide">
 
             <div style="display:flex; width: 85%;">
 

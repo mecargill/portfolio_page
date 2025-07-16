@@ -27,14 +27,14 @@
         <main>
             <h2>Planning</h2>
             <p>
-                I wanted to learn more about RF design and how radars work, so I decided to design a radar system. I was able to accomplish this, detecting targets at over 60 ft, for under $100 (including parts and PCB fab). I wanted to be able to detect range, but not have to worry about pulses, so I decided to make a continuous wave radar, with frequency modulation (FMCW). For code and design files, <a href="https://github.com/mecargill/radar_proj">see the GitHub repo</a>.
+                I wanted to learn more about RF design and how radars work, so I decided to design a radar system. I was able to accomplish this, detecting targets at over 80 ft, for under $100 (including parts and PCB fab). I wanted to be able to detect range, but not have to worry about pulses, so I decided to make a continuous wave radar, with frequency modulation (FMCW). For code and design files, <a href="https://github.com/mecargill/radar_proj">see the GitHub repo</a>.
             </p>
-            <img src="../../assets/img/rad/fmcw_v2.drawio.png" style="width: 80%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/rad/fmcw_v2.drawio.png" class="imgWide">
             <p>
                 The block diagram shows my high level design and power estimates. I am using a microcontroller to generate a ramp signal for the VCO, allowing for programmable frequency sweeps. I am using a Raspberry Pi (which I already had) to run the user interface and signal processing program. I am also using homemade cantennas. I used this block diagram to help me check part specs, and to make sure I would be within FCC limits. I chose to use the 2.4GHz ISM band because parts should be easy to find. 
             </p>
 
-            <img src="../../assets/img/rad/layout.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/rad/layout.png" class="imgWide">
             <p>
                 I designed the PCB in KiCAD. I used a 4 layer design. I added many configurable SMA taps and test pads for ease of debugging. In retrospect, I should have used test hooks instead of pads, and also added an LED to indicate power. I am using micro USB for power, SMA edge mount for coax connections, and soldered jumper wires for interfacing with the microcontroller. I switched the LNA for another gain block to limit small pitch QFN parts since I would be assembling by hand.
             </p>
@@ -44,9 +44,9 @@
 
             <h2>Assembly/Development</h2>
             <p>
-                I used the STM32 F446RE Nucleo board for my microcontroller. It has an onboard DAC and ADC. I programmed it in C, setting up a double buffering arrangement with DMA to fill and empty the buffer using ADC and SPI peripherals. I also make a static buffer and send it to the DAC to generate the ramp/triangle wave.
+                I used the STM32 F446RE Nucleo board for my microcontroller. It has an onboard DAC and ADC. I programmed it in C, setting up a double buffering arrangement with DMA to fill and empty the buffer using ADC and SPI peripherals. I also make a static buffer and send it to the DAC to generate the triangle wave for input to the VCO.
             </p>
-            <img src="../../assets/img/rad/dubs1.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <img src="../../assets/img/rad/board_and_antenna.png" class="imgWide">
             <p>
                 I use GT's Hive makerspace for assembly. I used their laser cutters to cut a mylar stencil. All but the op amp and VCO footprints came out right. I used the reflow oven to solder most of the SMD components. I soldered the 0.65mm pitch op amp and VCO by hand, since their footprints melted together in the stencil. Then I soldered THT components and SMA connectors to the TX, RX, and main TX test tap locations (I didn't want to hurt the signal analyser with the real TX signal). I verified my design by checking the power rails and the TX tap using a DMM and signal analyzer.
             </p>
@@ -57,27 +57,47 @@
             
 
 
-            <h2>Testing and Improvements</h2>
-            <h3>Iteration 1 - Initial</h3>
+            <h2>Testing</h2>
             
-            <img src="../../assets/img/rad/dubs2.png" style="width: 85%; height: fit-content; border-radius: 5px;">
+            <h3>Test Setup</h3>
+            <img src="../../assets/img/rad/car_setup.png" class="imgWide">
             <img src="../../assets/img/rad/first_car_test.png" style="width: 50%; height: fit-content; border-radius: 5px;">
             <p>
-                My first iteration was just to verify functionality. I used a monitor, keyboard, and mouse for the Pi, plus extension cords and USB adapters for power. Nothing was secured in place. This made setting up very unwieldy. However, by backing the car up then going forward I was succesfully able to see a track in the spectrogram. 
-            </p>
-            <h3> Iteration 2 - Improved Target and Setup </h3>
-            <img src="../../assets/img/rad/dubs3.png" style="width: 85%; height: fit-content; border-radius: 5px;">
-            <img src="../../assets/img/rad/results_it2.png" style="width: 85%; height: fit-content; border-radius: 5px;">
-            <p>
-                This iteration, I secured everything to a board for portability. I also got rid of many cables and the need for a monitor by using VNC to the Pi with my laptop. Instead of extension cords, I used a battery. I also built a corner reflecter to have a better target when testing. In this test, I realized that when I turn the radar on, it stops bluetooth from working nearby.  
+                I first tested using a car as a target to verify functionality. I used a monitor, keyboard, and mouse for the Pi, plus extension cords and USB adapters for power. By backing the car up then going forward I was succesfully able to see a track in the spectrogram. 
             </p>
             <p>
-                You can clearly see the increasing beat frequency as I walked the corner reflector away. The second image is a snapshot of the voltage seen by the ADC when I held the corner reflector ~1m away. You can see that I am not using the full range of 0-3.3V. You can also see that the ADC doesn't look very good. A lot of the noise is probably coming from there, not actual thermal noise. So, since the deviation from 1.65V is about 0.4V, I can add ~3-4x gain to the buffer amp I am using in order to reduce the effect of the low quality ADC readings (I made this configurable in the PCB layout). Also, the constant lines at the bottom are annoying, and I can remove those with DSP. 
+                You can see that everything is at multiples of about ~0.6 kHz, which is the frequency of my modulating triangle wave. This is because in the initial FFT program on the Pi, the window size was larger than chirp length. Since the beat frequency switches sign as the slope of the ramp switches sign, the signal will be periodic, with the same period as the triangle wave (for a stationary target). In other words, the range resolution of an FMCW radar is only determined by the chirp bandwidth, but in effect I was trying to artificially increase the resolution with a wider FFT window (which doesn't actually gain any more resolution).
             </p>
-            <h3> Iteration 3 - Tuned Gain, Better Processing </h3>
+           
+            <img src="../../assets/img/rad/refl_setup.png" class="imgWide">
+            
             <p>
-                In progress
+                Now that I knew it worked, I built a corner reflector for a target, bought an adapter to VNC into the pi from my laptop, set the boards up to be used with a battery, and secured the setup to a board. (I also realized that the device cuts out nearby bluetooth devices when it's on)
             </p>
+            <p>
+                To see how far it could detect my reflector, I went to an open field. I first took a measurement with no targets to act as a baseline, then took a measurement with me holding the reflector and walking away. 
+            </p>
+          
+           <h3>Results</h3>
+           <p>For details of how I made these plots, see the "sp" folder <a href="https://github.com/mecargill/radar_proj">here.</a></p>
+           <h4>Range vs Time</h4>
+           <div class="rowImgContainer">
+                <img src="../../assets/img/rad/max_range.png" class="imgMed">
+                <img src="../../assets/img/rad/max_range_high_contrast.png" class="imgMed">
+           </div>
+           
+           <p>
+                You can see that once I fixed the window length to match the chirp length, the spectrum looks more continuous. I plotted z scores relative to the baseline measurement in order to remove the background noise, then added some thresholds to clean it up. You can see that in the first picture (even with poor reflector alignment due to me walking), the track extends to about 25 m (82 ft) before dropping out.
+           </p>
+           <h4>Range vs Velocity over time</h4>
+           <div class="rowImgContainer">
+                <img src="../../assets/img/rad/data_doppler.gif" class="imgMed">
+                <img src="../../assets/img/rad/data_doppler_high_contrast.gif" class="imgMed">
+           </div>
+           
+           <p>
+                Then, I did a 2D FFT to get Range-Doppler plots. This was very sensitive to chirp alignment, and in the future I would add a trigger signal to tell me when chirps are starting. However, for now I made a software based solution that detected the chirps instead. I subtracted the averages and added thresholds to remove the 0 velocity leakage signals. You can see the motion in the range vs time plot clearly depicted as the target moves out to a positive velocity then stays there as it moves away.
+           </p>
             
         </main>
     </body>
