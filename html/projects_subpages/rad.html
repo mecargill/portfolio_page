@@ -31,12 +31,12 @@
             </p>
             <img src="../../assets/img/rad/fmcw_v2.drawio.png" class="imgWide">
             <p>
-                The block diagram shows my high level design and power estimates. I am using a microcontroller to generate a ramp signal for the VCO, allowing for programmable frequency sweeps. I am using a Raspberry Pi (which I already had) to run the user interface and signal processing program. I am also using homemade cantennas. I used this block diagram to help me check part specs, and to make sure I would be within FCC limits. I chose to use the 2.4GHz ISM band because parts should be easy to find. 
+                The block diagram shows my high level design and power estimates. I am using a microcontroller to generate a triangle wave signal for the VCO, allowing for programmable frequency sweep parameters. I am using a Raspberry Pi to run the user interface and signal processing program. I am also using homemade cantennas. I used this block diagram to help me check part specs, and to make sure I would be within FCC limits. I chose to use the 2.4GHz ISM band because parts should be easy to find. 
             </p>
 
             <img src="../../assets/img/rad/layout.png" class="imgWide">
             <p>
-                I designed the PCB in KiCAD. I used a 4 layer design. I added many configurable SMA taps and test pads for ease of debugging. In retrospect, I should have used test hooks instead of pads, and also added an LED to indicate power. I am using micro USB for power, SMA edge mount for coax connections, and soldered jumper wires for interfacing with the microcontroller. I switched the LNA for another gain block to limit small pitch QFN parts since I would be assembling by hand.
+                I designed the PCB in KiCAD. I made the design 4 layers so that microstrip traces didn't have to be huge. I added many configurable SMA taps and test pads for ease of debugging. I am using micro USB for power, SMA edge mount for coax connections, and soldered jumper wires for interfacing with the microcontroller (J3). I used a resistive tap of the TX signal rather than a coupler to reduce cost. I couldn't find many LNA options that were larger than 0.5mm pitch, so I opted to use a gain block instead (with larger pitch). This sacrificed noise figure in return for ease of assembly. In retrospect, I should have used test hooks instead of pads, and also added an LED to indicate power.
             </p>
 
 
@@ -44,11 +44,11 @@
 
             <h2>Assembly/Development</h2>
             <p>
-                I used the STM32 F446RE Nucleo board for my microcontroller. It has an onboard DAC and ADC. I programmed it in C, setting up a double buffering arrangement with DMA to fill and empty the buffer using ADC and SPI peripherals. I also make a static buffer and send it to the DAC to generate the triangle wave for input to the VCO.
+                I used the STM32 F446RE Nucleo board for my microcontroller. It has an onboard DAC and ADC. I programmed it in C, setting up a double buffering arrangement to transfer the ADC samples to the Pi through SPI. I also set up a static buffer to feed the DAC with a triangle wave using DMA. 
             </p>
             <img src="../../assets/img/rad/board_and_antenna.png" class="imgWide">
             <p>
-                I use GT's Hive makerspace for assembly. I used their laser cutters to cut a mylar stencil. All but the op amp and VCO footprints came out right. I used the reflow oven to solder most of the SMD components. I soldered the 0.65mm pitch op amp and VCO by hand, since their footprints melted together in the stencil. Then I soldered THT components and SMA connectors to the TX, RX, and main TX test tap locations (I didn't want to hurt the signal analyser with the real TX signal). I verified my design by checking the power rails and the TX tap using a DMM and signal analyzer.
+                I used GT's Hive makerspace for assembly. First, I laser cut a mylar stencil. All but the smallest footprints came out right. I used the reflow oven to solder most of the SMD components. I soldered the 0.65mm pitch op amp and VCO by hand, since their footprints melted together in the stencil. Then I soldered THT components and SMA connectors to the TX, RX, and TX test tap signals. I tested the power rails and the TX tap using a DMM and signal analyzer.
             </p>
             <p>
                 Additionally, I found cans that were the right dimensions to serve as a waveguide for 2.4GHz. Then I stripped some coax jumpers and drilled holes in the cans. I was able to use the Hive's VNA to tune my cantenna's S11 for my band before soldering.
@@ -63,16 +63,16 @@
             <img src="../../assets/img/rad/car_setup.png" class="imgWide">
             <img src="../../assets/img/rad/first_car_test.png" style="width: 50%; height: fit-content; border-radius: 5px;">
             <p>
-                I first tested using a car as a target to verify functionality. I used a monitor, keyboard, and mouse for the Pi, plus extension cords and USB adapters for power. By backing the car up then going forward I was succesfully able to see a track in the spectrogram. 
+                I first tested using a car as a target to verify functionality. I used a monitor, keyboard, and mouse for the Pi, plus extension cords and USB adapters for power. By backing the car up then going forward I was succesfully able to see a track in the spectrogram. I discovered that while I was radiating, nearby bluetooth devices would drop their connection.
             </p>
             <p>
-                You can see that everything is at multiples of about ~0.6 kHz, which is the frequency of my modulating triangle wave. This is because in the initial FFT program on the Pi, the window size was larger than chirp length. Since the beat frequency switches sign as the slope of the ramp switches sign, the signal will be periodic, with the same period as the triangle wave (for a stationary target). In other words, the range resolution of an FMCW radar is only determined by the chirp bandwidth, but in effect I was trying to artificially increase the resolution with a wider FFT window (which doesn't actually gain any more resolution).
+                You can see that everything was at multiples of about ~0.6 kHz, which was the frequency of my modulating triangle wave. This is because in the initial FFT program on the Pi, the window size was larger than chirp length. Since the beat frequency switches sign as the slope of the ramp switches sign, the signal will be periodic, with the same period as the triangle wave (for a stationary target). In other words, the range resolution of an FMCW radar is only determined by the chirp bandwidth, but in effect I was trying to artificially increase the resolution with a wider FFT window (which doesn't actually gain any more resolution).
             </p>
            
             <img src="../../assets/img/rad/refl_setup.png" class="imgWide">
             
             <p>
-                Now that I knew it worked, I built a corner reflector for a target, bought an adapter to VNC into the pi from my laptop, set the boards up to be used with a battery, and secured the setup to a board. (I also realized that the device cuts out nearby bluetooth devices when it's on)
+                Now that I knew it worked, I built a corner reflector for a target, bought an adapter to VNC into the pi from my laptop, set the boards up to be used with a battery, and secured the setup to a wooden board.
             </p>
             <p>
                 To see how far it could detect my reflector, I went to an open field. I first took a measurement with no targets to act as a baseline, then took a measurement with me holding the reflector and walking away. 
@@ -87,7 +87,7 @@
            </div>
            
            <p>
-                You can see that once I fixed the window length to match the chirp length, the spectrum looks more continuous. I plotted z scores relative to the baseline measurement in order to remove the background noise, then added some thresholds to clean it up. You can see that in the first picture (even with poor reflector alignment due to me walking), the track extends to about 25 m (82 ft) before dropping out.
+                These are the results from the test in which I held the corner reflector in a field and walked backwards. You can see that, in comparison to the initial car test, the spectrum looks more continuous. This is because I made the FFT windows align with the chirps. I plotted z scores relative to the baseline measurement in order to remove the background noise, then added some thresholds to clean it up. You can see that in the first picture (even with poor reflector alignment due to me walking), the track extends to about 25 m (82 ft) before dropping out.
            </p>
            <h4>Range vs Velocity over time</h4>
            <div class="rowImgContainer">
